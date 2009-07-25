@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ooglue", "ooglue\ooglue.csproj", "{FD5A37A1-9357-4471-8127-71F554B5CDBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ooglue.Reflection", "ooglue.Reflection\ooglue.Reflection.csproj", "{15D54913-C27A-445D-9EDA-B41885CD890C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD5A37A1-9357-4471-8127-71F554B5CDBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5A37A1-9357-4471-8127-71F554B5CDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5A37A1-9357-4471-8127-71F554B5CDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5A37A1-9357-4471-8127-71F554B5CDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15D54913-C27A-445D-9EDA-B41885CD890C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15D54913-C27A-445D-9EDA-B41885CD890C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15D54913-C27A-445D-9EDA-B41885CD890C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15D54913-C27A-445D-9EDA-B41885CD890C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
