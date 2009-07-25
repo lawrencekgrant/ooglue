@@ -13,7 +13,7 @@ namespace ooglue
 	/// <summary>
 	/// Description of DataExchange.
 	/// </summary>
-	public abstract class DataExchange
+	public interface IDataExchange
 	{
 		
 	}

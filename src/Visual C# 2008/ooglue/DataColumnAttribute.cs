@@ -15,6 +15,11 @@ namespace ooglue
 	/// </summary>
 	public class DataColumnAttribute : Attribute
 	{
-		
+        public string ColumnName { get; set; }
+
+        public DataColumnAttribute(string columnName)
+        {
+            this.ColumnName = columnName;
+        }
 	}
 }
