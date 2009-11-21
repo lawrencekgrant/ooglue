@@ -3,9 +3,7 @@ using System;
 
 namespace ooglue
 {
-
-
-	public class XmlExchange
+	public class XmlExchange : IDataExchange
 	{
 
 		public XmlExchange ()
