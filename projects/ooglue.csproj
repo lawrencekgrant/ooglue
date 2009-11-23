@@ -6,10 +6,11 @@
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A710A7B0-4FD8-4F47-BFCC-8BB7D46B32A1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AssemblyName>ooglue</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <BaseDirectory>..\src</BaseDirectory>
+    <RootNamespace>ooglue</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,9 +37,16 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\src\IDataExchange.cs" />
-    <Compile Include="..\src\XmlExchange.cs" />
+    <Compile Include="..\src\DataColumnAttribute.cs" />
+    <Compile Include="..\src\DataTableAttribute.cs" />
+    <Compile Include="..\src\DataMethodAttribute.cs" />
+    <Compile Include="..\src\DataDirection.cs" />
+    <Compile Include="..\src\MySqlDataExchange.cs" />
+    <Compile Include="..\src\DataAttribute.cs" />
   </ItemGroup>
 </Project>
