@@ -54,6 +54,9 @@
     <Compile Include="..\src\DataAttribute.cs" />
     <Compile Include="..\src\Utility.cs" />
     <Compile Include="..\src\Connections\MySqlAccess.cs" />
+    <Compile Include="..\src\Connections\DataAccess.cs" />
+    <Compile Include="..\src\InAttribute.cs" />
+    <Compile Include="..\src\KeyFieldAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="..\src\Connections\" />

@@ -1,6 +1,8 @@
 
 using System;
 using System.Configuration;
+using System.Data;
+
 
 using MySql;
 using MySql.Data;
@@ -8,32 +10,32 @@ using MySql.Data.MySqlClient;
 
 namespace ooglue.Connections
 {
-	public class MySqlAccess
+	public class MySqlAccess : DataAccess
 	{
 
 		public MySqlAccess ()
 		{
 		}
 		
-		public MySqlDataReader ExecuteReader(MySqlConnection connection, string storedProcedureName, params MySqlParameter [] mySqlParams)
+		public override IDataReader ExecuteReader(IDbConnection connection, string storedProcedureName, params IDataParameter [] mySqlParams)
 		{
 			MySqlDataReader returnReader;
-			MySqlCommand command = new MySqlCommand(storedProcedureName, connection);
+			MySqlCommand command = new MySqlCommand(storedProcedureName, (MySqlConnection)connection);
 			command.CommandType = System.Data.CommandType.StoredProcedure;
 			command.Parameters.AddRange(mySqlParams);
 			returnReader = command.ExecuteReader();			
-			return returnReader;
+			return (IDataReader)returnReader;
 		}
 		
-		public static MySqlConnection NewConnection
+		public override IDbConnection NewConnection
 		{
 			get
 			{
-				return new MySqlConnection(ConnectionString);
+				return (IDbConnection)new MySqlConnection(ConnectionString);
 			}
 		}
 		
-		public static string ConnectionString
+		public override string ConnectionString
 		{
 			get
 			{

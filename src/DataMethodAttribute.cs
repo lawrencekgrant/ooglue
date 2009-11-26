@@ -7,12 +7,8 @@ namespace ooglue
 	{
 		public string InputMethod {get;set;}
 		public string OutputMethod {get;set;}
-
-		public DataMethodAttribute ()
-		{
-		}
 		
-		public DataMethodAttribute(string inputMethodName, string outputMethodName) : this()
+		public DataMethodAttribute(string inputMethodName, string outputMethodName)
 		{
 			InputMethod = inputMethodName;
 			OutputMethod = outputMethodName;

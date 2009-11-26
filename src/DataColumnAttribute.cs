@@ -5,14 +5,6 @@ namespace ooglue
 {
 	public class DataColumnAttribute : DataAttribute
 	{
-
-		public DataColumnAttribute ()
-		{
-		}
-		
-		public DataColumnAttribute (string name) : this()
-		{
-			this.Name = name;
-		}
+		public DataColumnAttribute(string name) : base(name) { }
 	}
 }
