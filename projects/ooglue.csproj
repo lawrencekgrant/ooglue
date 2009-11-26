@@ -43,15 +43,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Library\mysql\mysql.data.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\src\IDataExchange.cs" />
     <Compile Include="..\src\DataColumnAttribute.cs" />
     <Compile Include="..\src\DataTableAttribute.cs" />
     <Compile Include="..\src\DataMethodAttribute.cs" />
     <Compile Include="..\src\DataDirection.cs" />
-    <Compile Include="..\src\MySqlDataExchange.cs" />
+    <Compile Include="..\src\DataExchange.cs" />
     <Compile Include="..\src\DataAttribute.cs" />
     <Compile Include="..\src\Utility.cs" />
+    <Compile Include="..\src\Connections\MySqlAccess.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="..\src\Connections\" />
   </ItemGroup>
 </Project>

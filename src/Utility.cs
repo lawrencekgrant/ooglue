@@ -5,11 +5,7 @@ namespace ooglue
 {
 
 
-	public class Utility
+	public static class Utility
 	{
-
-		public Utility ()
-		{
-		}
 	}
 }
