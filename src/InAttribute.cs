@@ -5,9 +5,6 @@ namespace ooglue
 {
 	public class InAttribute : DataAttribute
 	{		
-		public InAttribute (string name)
-		{
-			Name = name;
-		}
+		public InAttribute(string name) : base(name) { }
 	}
 }
