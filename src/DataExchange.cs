@@ -85,8 +85,8 @@ namespace ooglue
 			
 			foreach(PropertyInfo propertyInfo in typeof(T).GetProperties())
 			{				
-				List<DataColumnAttribute> columnAttributes = 
-					new List<DataColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
+				List<ColumnAttribute> columnAttributes = 
+					new List<ColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
 				if(columnAttributes.Count > 0)
 				{
 					IDbDataParameter parameter = command.CreateParameter();
@@ -106,8 +106,8 @@ namespace ooglue
 			string dataTableName = string.Empty;
 			List<string> fields = new List<string>();
 			List<string> values = new List<string>();
-			List<DataTableAttribute> dataTableAttributes =
-				new List<DataTableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
+			List<TableAttribute> dataTableAttributes =
+				new List<TableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
 			
 			IDbConnection connection = access.NewConnection;
 			IDbCommand command = connection.CreateCommand();
@@ -126,8 +126,8 @@ namespace ooglue
 					continue;
 				}
 				
-				List<DataColumnAttribute> columnAttributes = 
-					new List<DataColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
+				List<ColumnAttribute> columnAttributes = 
+					new List<ColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
 				if(columnAttributes.Count > 0)
 				{
 					fields.Add(columnAttributes[0].Name);
@@ -154,8 +154,8 @@ namespace ooglue
 			string dataTableName = string.Empty;
 			string primaryKeyId = string.Empty;
 			string primaryKeyValue = string.Empty;
-			List<DataTableAttribute> dataTableAttributes =
-				new List<DataTableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
+			List<TableAttribute> dataTableAttributes =
+				new List<TableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
 			
 			List<string> updateValues = new List<string>();
 			
@@ -179,8 +179,8 @@ namespace ooglue
 					continue;
 				}
 				
-				List<DataColumnAttribute> columnAttributes = 
-					new List<DataColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
+				List<ColumnAttribute> columnAttributes = 
+					new List<ColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
 				if(columnAttributes.Count > 0)
 				{
 					updateValues.Add(string.Format(valueTemplateString, columnAttributes[0].Name, propertyInfo.GetValue(paramsObject, null)));
@@ -208,8 +208,8 @@ namespace ooglue
 			IDbConnection connection = access.NewConnection;
 			IDbCommand command = connection.CreateCommand();
 			
-			List<DataTableAttribute> dataTables =
-				new List<DataTableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
+			List<TableAttribute> dataTables =
+				new List<TableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
 			
 			if(dataTables.Count > 0)
 			{

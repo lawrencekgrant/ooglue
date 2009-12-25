@@ -4,8 +4,8 @@ using System;
 namespace ooglue
 {
 	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class DataTableAttribute : DataAttribute
+	public sealed class TableAttribute : DataAttribute
 	{		
-		public DataTableAttribute(string name) : base(name) { }
+		public TableAttribute(string name) : base(name) { }
 	}
 }
