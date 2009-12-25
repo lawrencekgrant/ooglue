@@ -30,8 +30,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Package>moon-browser-redist-assemblies</Package>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -53,12 +53,15 @@
     <Compile Include="..\src\DataExchange.cs" />
     <Compile Include="..\src\DataAttribute.cs" />
     <Compile Include="..\src\Utility.cs" />
-    <Compile Include="..\src\Connections\MySqlAccess.cs" />
-    <Compile Include="..\src\Connections\DataAccess.cs" />
     <Compile Include="..\src\InAttribute.cs" />
     <Compile Include="..\src\KeyFieldAttribute.cs" />
+    <Compile Include="..\src\OutAttribute.cs" />
+    <Compile Include="..\src\DataConveyor.cs" />
+    <Compile Include="..\src\ForeignKeyAttribute.cs" />
+    <Compile Include="..\src\Access\DataAccess.cs" />
+    <Compile Include="..\src\Access\MySqlAccess.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="..\src\Connections\" />
+    <Folder Include="..\src\Access\" />
   </ItemGroup>
 </Project>
