@@ -53,11 +53,8 @@
     <Compile Include="..\src\DataExchange.cs" />
     <Compile Include="..\src\DataAttribute.cs" />
     <Compile Include="..\src\Utility.cs" />
-    <Compile Include="..\src\InAttribute.cs" />
     <Compile Include="..\src\KeyFieldAttribute.cs" />
-    <Compile Include="..\src\OutAttribute.cs" />
     <Compile Include="..\src\DataConveyor.cs" />
-    <Compile Include="..\src\ForeignKeyAttribute.cs" />
     <Compile Include="..\src\Access\DataAccess.cs" />
     <Compile Include="..\src\Access\MySqlAccess.cs" />
     <Compile Include="..\src\Properties\AssemblyInfo.cs" />
