@@ -117,7 +117,15 @@ namespace ooglue
 				dataTableName = dataTableAttributes[0].Name;
 			}
 			foreach(PropertyInfo propertyInfo in typeof(T).GetProperties())
-			{				
+			{	
+				List<KeyFieldAttribute> keyFields =
+					new List<KeyFieldAttribute>((KeyFieldAttribute[])propertyInfo.GetCustomAttributes(typeof(KeyFieldAttribute), true));
+				
+				if(keyFields.Count > 0)
+				{
+					continue;
+				}
+				
 				List<DataColumnAttribute> columnAttributes = 
 					new List<DataColumnAttribute>((DataColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(DataColumnAttribute), true));
 				if(columnAttributes.Count > 0)
@@ -132,6 +140,59 @@ namespace ooglue
 			                                    dataTableName, 
 			                                    string.Join(",", fields.ToArray()), 
 			                                    string.Join(",", values.ToArray()));
+			
+			command.CommandType = CommandType.Text;
+			
+			return command;
+		}
+		
+		
+		public static IDbCommand GetDynamicUpdateFromObject<T>(DataAccess access, T paramsObject)
+		{
+			string templateString = "update {0} set {1} where {2} = {3}";
+			string valueTemplateString = "{0} = '{1}'";
+			string dataTableName = string.Empty;
+			string primaryKeyId = string.Empty;
+			string primaryKeyValue = string.Empty;
+			List<DataTableAttribute> dataTableAttributes =
+				new List<DataTableAttribute>((DataTableAttribute[])typeof(T).GetCustomAttributes(typeof(DataTableAttribute), true));
+			
+			List<string> updateValues = new List<string>();
+			
+			IDbConnection connection = access.NewConnection;
+			IDbCommand command = connection.CreateCommand();
+			
+			if(dataTableAttributes.Count > 0)
+			{
+				dataTableName = dataTableAttributes[0].Name;
+			}
+			
+			foreach(PropertyInfo propertyInfo in typeof(T).GetProperties())
+			{	
+				List<KeyFieldAttribute> keyFields =
+					new List<KeyFieldAttribute>((KeyFieldAttribute[])propertyInfo.GetCustomAttributes(typeof(KeyFieldAttribute), true));
+				
+				if(keyFields.Count > 0)
+				{
+					primaryKeyId = keyFields[0].Name;
+					primaryKeyValue = propertyInfo.GetValue(paramsObject, null).ToString();
+					continue;
+				}
+				
+				List<DataColumnAttribute> columnAttributes = 
+					new List<DataColumnAttribute>((DataColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(DataColumnAttribute), true));
+				if(columnAttributes.Count > 0)
+				{
+					updateValues.Add(string.Format(valueTemplateString, columnAttributes[0].Name, propertyInfo.GetValue(paramsObject, null)));
+				}
+			}
+			
+			command.CommandText = string.Format(
+			                                    templateString, 
+			                                    dataTableName, 
+			                                    string.Join(",", updateValues.ToArray()),
+			                                    primaryKeyId,
+			                                    primaryKeyValue);
 			
 			command.CommandType = CommandType.Text;
 			
