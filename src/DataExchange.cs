@@ -19,7 +19,11 @@ namespace ooglue
 		
 		public static T GetObjectFromDataReader<T>(IDataReader reader) where T : new()
 		{
-			return GetFromDataReader<T>(reader, 1)[0];
+			List<T> returnItemList = GetFromDataReader<T>(reader, 1);
+			
+			if(returnItemList != null)
+				return returnItemList[0];
+			throw new Exception("There were no items created from the source IDataReader.");
 		}
 		
 		public static List<T> GetFromDataReader<T>(IDataReader reader) where T : new()
@@ -65,6 +69,7 @@ namespace ooglue
 					catch(Exception ex)
 					{
 						Console.WriteLine("Error:" + ex.ToString());
+						throw;
 					}
 				}
 				returnList.Add(t);

@@ -3,7 +3,7 @@ using System;
 
 namespace ooglue
 {
-	public enum DataDirection : sbyte
+	public enum DataDirection
 	{
 		In = 1,
 		Out = 2,

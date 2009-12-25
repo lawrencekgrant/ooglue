@@ -17,19 +17,18 @@ namespace ooglue.Access
 		{
 		}
 		
-		public override IDataReader ExecuteProcedure(IDbConnection connection, string storedProcedureName, params IDataParameter [] mySqlParams)
+		public override IDataReader ExecuteProcedure(IDbConnection connection, string procedureName, params IDataParameter [] parameters)
 		{
 			MySqlDataReader returnReader;
-			MySqlCommand command = new MySqlCommand(storedProcedureName, (MySqlConnection)connection);
+			MySqlCommand command = new MySqlCommand(procedureName, (MySqlConnection)connection);
 			command.CommandType = System.Data.CommandType.StoredProcedure;
-			command.Parameters.AddRange(mySqlParams);
+			command.Parameters.AddRange(parameters);
 			returnReader = command.ExecuteReader();			
 			return returnReader;
 		}
 		
 		public override IDataReader ExecuteSql (IDbConnection connection, string commandText)
 		{
-			MySqlDataReader returnReader;
 			MySqlCommand command = (MySqlCommand)connection.CreateCommand ();
 			command.CommandText = commandText;
 			command.CommandType = CommandType.Text;

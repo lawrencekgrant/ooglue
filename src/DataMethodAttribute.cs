@@ -3,7 +3,8 @@ using System;
 
 namespace ooglue
 {
-	public class DataMethodAttribute : DataAttribute
+	[AttributeUsage(AttributeTargets.Method)]
+	public sealed class DataMethodAttribute : DataAttribute
 	{
 		public string InputMethod {get;set;}
 		public string OutputMethod {get;set;}

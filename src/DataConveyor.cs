@@ -29,7 +29,11 @@ namespace ooglue
 			finally
 			{
 				if(command != null && command.Connection != null)
+				{
 					command.Connection.Close();
+					command.Connection.Dispose();
+					command.Dispose();
+				}
 			}
 		}
 		
@@ -37,13 +41,15 @@ namespace ooglue
 		{
 			IDataReader reader;
 			IDbConnection connection = null;
-			
+			List<T> returnList;
 			try
 			{
 				connection = access.NewConnection;
 				connection.Open();
-				reader = access.ExecuteProcedure(connection, storedProcedureName, parameters);
-				List<T> returnList = DataExchange.GetFromDataReader<T>(reader);
+				using(reader = access.ExecuteProcedure(connection, storedProcedureName, parameters))
+				{
+					returnList = DataExchange.GetFromDataReader<T>(reader);
+				}
 				return returnList;
 			}
 			catch
@@ -61,12 +67,15 @@ namespace ooglue
 		{
 			IDataReader reader;
 			IDbConnection connection = null;
+			List<T> returnList;
 			try
 			{
 				connection = access.NewConnection;
 				connection.Open();
-				reader = access.ExecuteSql(connection, commandText);
-				List<T> returnList = DataExchange.GetFromDataReader<T>(reader);
+				using(reader = access.ExecuteSql(connection, commandText))
+				{
+					returnList = DataExchange.GetFromDataReader<T>(reader);
+				}
 				return returnList;
 				
 			}

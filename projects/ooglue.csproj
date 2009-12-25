@@ -60,8 +60,10 @@
     <Compile Include="..\src\ForeignKeyAttribute.cs" />
     <Compile Include="..\src\Access\DataAccess.cs" />
     <Compile Include="..\src\Access\MySqlAccess.cs" />
+    <Compile Include="..\src\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="..\src\Access\" />
+    <Folder Include="..\src\Properties\" />
   </ItemGroup>
 </Project>

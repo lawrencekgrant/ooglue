@@ -3,7 +3,8 @@ using System;
 
 namespace ooglue
 {
-	public class DataColumnAttribute : DataAttribute
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+	public sealed class DataColumnAttribute : DataAttribute
 	{
 		public bool IsPrimaryKey { get; set; }
 		
