@@ -199,42 +199,45 @@ namespace ooglue
 			return command;
 		}
 		
-		
-		/*
-		 * This may not be the right thing to do in this class. This probably isn't the place to interact with SQL
-		 * 
-		public static T GetObjectFromMethod<T>(DataAccess access, MethodBase method) where T : new()
+		public static IDbCommand GetDynamicDeleteFromObject<T>(DataAccess access, T paramsObject)
 		{
-			List<DataMethodAttribute> methodAttributes = new List<DataMethodAttribute>((DataMethodAttribute[])method.GetCustomAttributes(typeof(DataMethodAttribute), true));
-			foreach(DataMethodAttribute dma in methodAttributes)
+			string commandTextTemplate = "delete from {0} where {1} = '{2}'";
+			string primaryKeyId = string.Empty;
+			string primaryKeyValue = string.Empty;
+			string tableName = string.Empty;
+			IDbConnection connection = access.NewConnection;
+			IDbCommand command = connection.CreateCommand();
+			
+			List<DataTableAttribute> dataTables =
+				new List<DataTableAttribute>((DataTableAttribute[])typeof(T).GetCustomAttributes(typeof(DataTableAttribute), true));
+			
+			if(dataTables.Count > 0)
 			{
-				IDbConnection connection = null;
-				IDataReader reader = null;
-				
-				try
-				{
-					connection = access.NewConnection;
-					reader = access.ExecuteReader(connection, dma.OutputMethod, GetDataParametersFromInfo(method.GetParameters()));
-					connection.Open();
-					return (T)GetFromDataReader<T>(reader, 1)[0];
-				}
-				catch(Exception ex)
-				{
-					Debug.WriteLine(ex.ToString());
-					throw;
-				}
-				finally
-				{
-					if(reader != null)
-						reader.Close();
-					if(connection != null)
-						connection.Close();
-				}
-				
+				tableName = dataTables[0].Name;
 			}
-			return default(T);
+			
+			foreach(PropertyInfo propertyInfo in typeof(T).GetProperties())
+			{	
+				List<KeyFieldAttribute> keyFields =
+					new List<KeyFieldAttribute>((KeyFieldAttribute[])propertyInfo.GetCustomAttributes(typeof(KeyFieldAttribute), true));
+				
+				if(keyFields.Count > 0)
+				{
+					primaryKeyId = keyFields[0].Name;
+					primaryKeyValue = propertyInfo.GetValue(paramsObject, null).ToString();
+					break;
+				}
+			}
+			
+			command.CommandText = string.Format(
+			                                    commandTextTemplate,
+			                                    tableName,
+			                                    primaryKeyId,
+			                                    primaryKeyValue);
+			command.CommandType = CommandType.Text;
+			return command;
 		}
-		*/
+		
 		
 		/*
 		private static Dictionary<string, object> GetInputParametersFromInfo(ParameterInfo [] parameters)

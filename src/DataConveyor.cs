@@ -15,13 +15,13 @@ namespace ooglue
 		{
 		}
 		
-		public static void SaveObject<T>(DataAccess access, T objectToSave)
+		public static void UpdateObject<T>(DataAccess access, T objectToUpdate)
 		{
 			IDbCommand command = null;
 			
 			try
 			{
-				command = DataExchange.GetDynamicInsertFromObject(access, objectToSave);
+				command = DataExchange.GetDynamicUpdateFromObject<T>(access, objectToUpdate);
 				command.Connection.Open();
 				command.ExecuteNonQuery();
 			}
@@ -35,6 +35,33 @@ namespace ooglue
 					command.Dispose();
 				}
 			}
+		}
+		
+		public static void InsertObject<T>(DataAccess access, T objectToInsert)
+		{
+			IDbCommand command = null;
+			
+			try
+			{
+				command = DataExchange.GetDynamicInsertFromObject(access, objectToInsert);
+				command.Connection.Open();
+				command.ExecuteNonQuery();
+			}
+			catch { throw; }
+			finally
+			{
+				if(command != null && command.Connection != null)
+				{
+					command.Connection.Close();
+					command.Connection.Dispose();
+					command.Dispose();
+				}
+			}
+		}
+		
+		public static void DeleteObject<T>(DataAccess access, T objectToDelete)
+		{
+			
 		}
 		
 		public static List<T> FetchObjectListByProcedure<T>(DataAccess access, string storedProcedureName, params IDataParameter [] parameters) where T: new()
