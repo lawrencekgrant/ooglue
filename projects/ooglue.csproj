@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>ooglue</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <BaseDirectory>..\src</BaseDirectory>
+    <BaseDirectory>..\src\OOGlue</BaseDirectory>
     <RootNamespace>ooglue</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -39,28 +39,27 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
     <Reference Include="MySql.Data, Version=6.1.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Library\mysql\mysql.data.dll</HintPath>
+      <HintPath>..\lib\mysql\mysql.data.dll</HintPath>
     </Reference>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\src\DataColumnAttribute.cs" />
-    <Compile Include="..\src\DataTableAttribute.cs" />
-    <Compile Include="..\src\DataMethodAttribute.cs" />
-    <Compile Include="..\src\DataDirection.cs" />
-    <Compile Include="..\src\DataExchange.cs" />
-    <Compile Include="..\src\DataAttribute.cs" />
-    <Compile Include="..\src\Utility.cs" />
-    <Compile Include="..\src\KeyFieldAttribute.cs" />
-    <Compile Include="..\src\DataConveyor.cs" />
-    <Compile Include="..\src\Access\DataAccess.cs" />
-    <Compile Include="..\src\Access\MySqlAccess.cs" />
-    <Compile Include="..\src\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\src\OOGlue\ColumnAttribute.cs" />
+    <Compile Include="..\src\OOGlue\DataAttribute.cs" />
+    <Compile Include="..\src\OOGlue\DataConveyor.cs" />
+    <Compile Include="..\src\OOGlue\DataExchange.cs" />
+    <Compile Include="..\src\OOGlue\Direction.cs" />
+    <Compile Include="..\src\OOGlue\KeyFieldAttribute.cs" />
+    <Compile Include="..\src\OOGlue\ProcedureAttribute.cs" />
+    <Compile Include="..\src\OOGlue\TableAttribute.cs" />
+    <Compile Include="..\src\OOGlue\Utility.cs" />
+    <Compile Include="..\src\OOGlue\Access\DataAccess.cs" />
+    <Compile Include="..\src\OOGlue\Access\MySqlAccess.cs" />
+    <Compile Include="..\src\OOGlue\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="..\src\Access\" />
-    <Folder Include="..\src\Properties\" />
+    <None Include="..\src\OOGlue\ooglue.pidb" />
   </ItemGroup>
 </Project>
