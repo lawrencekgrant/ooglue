@@ -10,11 +10,14 @@ using System.Reflection;
 using System.Text;
 
 using ooglue.Access;
+using log4net;
 
 namespace ooglue
 {
 	public class DataExchange
 	{
+		private static readonly ILog log = LogManager.GetLogger(typeof(DataExchange));
+		
 		public DataExchange ()
 		{
 		}
@@ -64,13 +67,13 @@ namespace ooglue
 					if(propertyMap.ContainsKey(fieldName))
 					{
 						PropertyInfo info = propertyMap[fieldName];
-						System.Console.WriteLine("Mapping {0} to {1})", reader.GetValue(i).ToString(), info.Name);
+						log.InfoFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
 						info.SetValue(t, reader.GetValue(i), null);
 					}
 					}
 					catch(Exception ex)
 					{
-						Console.WriteLine("Error:" + ex.ToString());
+						log.ErrorFormat("Could not map field {0}: {1}", i, ex.ToString());
 						throw;
 					}
 				}
@@ -122,6 +125,7 @@ namespace ooglue
 			{	
 				List<ColumnAttribute> columnAttributes = 
 					new List<ColumnAttribute>((ColumnAttribute[])propertyInfo.GetCustomAttributes(typeof(ColumnAttribute), true));
+				
 				if(columnAttributes.Count > 0)
 				{
 					if(columnAttributes[0].IsPrimaryKey)

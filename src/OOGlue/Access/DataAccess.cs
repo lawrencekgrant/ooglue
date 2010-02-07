@@ -2,9 +2,7 @@
 using System;
 using System.Data;
 
-using ooglue.Access;
-
-namespace ooglue
+namespace ooglue.Access
 {
 
 
