@@ -60,16 +60,25 @@ namespace ooglue
 				{
 					try
 					{
-					if(reader.IsDBNull(i))
-						continue;
-					
-					fieldName = reader.GetName(i);
-					if(propertyMap.ContainsKey(fieldName))
-					{
-						PropertyInfo info = propertyMap[fieldName];
-						log.InfoFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
-						info.SetValue(t, reader.GetValue(i), null);
-					}
+						if(reader.IsDBNull(i))
+							continue;
+						
+						fieldName = reader.GetName(i);
+						if(propertyMap.ContainsKey(fieldName))
+						{
+							try
+							{
+								PropertyInfo info = propertyMap[fieldName];
+								log.InfoFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
+								if(info.PropertyType == typeof(bool))
+									info.SetValue(t, reader.GetBoolean(i), null);
+								else
+									info.SetValue(t, reader.GetValue(i), null);
+							}
+							catch(Exception ex)
+							{
+								log.Error(ex.ToString());							}
+							}
 					}
 					catch(Exception ex)
 					{
@@ -128,11 +137,18 @@ namespace ooglue
 				
 				if(columnAttributes.Count > 0)
 				{
+					try
+					{
 					if(columnAttributes[0].IsPrimaryKey)
 						continue;
 					
 					fields.Add(columnAttributes[0].Name);
 					values.Add(string.Format(valueTemplateString,propertyInfo.GetValue(paramsObject, null)));
+					}
+					catch(Exception ex)
+					{
+						log.Error(ex.ToString());
+					}
 				}
 			}
 			
