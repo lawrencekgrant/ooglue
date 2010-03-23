@@ -49,6 +49,7 @@ namespace ooglue
 				log.DebugFormat("Connection String for insert: {0}", access.ConnectionString);
 				log.DebugFormat("Object is {0}", objectToInsert.ToString());
 				command = DataExchange.GetDynamicInsertFromObject(access, objectToInsert);
+				log.DebugFormat("SQL: {0}", command.CommandText);
 				command.Connection.Open();
 				command.ExecuteNonQuery();
 			}

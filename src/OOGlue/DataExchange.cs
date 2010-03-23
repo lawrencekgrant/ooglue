@@ -69,7 +69,7 @@ namespace ooglue
 							try
 							{
 								PropertyInfo info = propertyMap[fieldName];
-								log.InfoFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
+								//log.InfoFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
 								if(info.PropertyType == typeof(bool))
 									info.SetValue(t, reader.GetBoolean(i), null);
 								else
