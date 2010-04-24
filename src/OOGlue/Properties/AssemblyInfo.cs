@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("ooglue")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A general data-mapping library for managed languages.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]

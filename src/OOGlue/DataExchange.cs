@@ -14,33 +14,53 @@ using log4net;
 
 namespace ooglue
 {
+	/// <summary>
+	/// The data exchange is responsible for converting data between formats, i.e. mapping from a data source to a list of objects, and vice
+	/// versa. 
+	/// </summary>
 	public class DataExchange
 	{
 		private static readonly ILog log = LogManager.GetLogger(typeof(DataExchange));
+		protected DataAccess access;
 		
-		public DataExchange ()
+		/// <summary>
+		/// Creates a new instance of a DataExchange
+		/// </summary>
+		/// <param name="access">
+		/// A <see cref="DataAccess"/> that determines the data access method for the exchange to be created.
+		/// </param>
+		public DataExchange (DataAccess access)
 		{
+			access = access;
 		}
 		
-		public static T GetObjectFromDataReader<T>(IDataReader reader) where T : new()
+		
+		/// <summary>
+		/// Retrieves a single instantiated and populated object from a data reader.
+		/// </summary>
+		/// <param name="reader">
+		/// A <see cref="IDataReader"/> containing the data to be mapped to the object.
+		/// </param>
+		/// <returns>
+		/// A <see cref="T"/> representing the type to be mapped and returned.
+		/// </returns>
+		/// <remarks>
+		/// The T parameter must be able to instantiated with a default, blank constructor. 
+		///</remarks>
+		public T GetObjectFromDataReader<T>(IDataReader reader) where T : new()
 		{
-			List<T> returnItemList = GetFromDataReader<T>(reader, 1);
+			List<T> returnItemList = GetFromDataReader<T>(reader);
 			
-			if(returnItemList != null)
+			if(returnItemList != null && returnItemList.Count > 0)
 				return returnItemList[0];
-			throw new Exception("There were no items created from the source IDataReader.");
+			
+			return default(T);
 		}
 		
-		public static List<T> GetFromDataReader<T>(IDataReader reader) where T : new()
-		{
-			return GetFromDataReader<T>(reader, int.MaxValue);
-		}
-		
-		public static List<T> GetFromDataReader<T>(IDataReader reader, int count) where T : new()
+		public List<T> GetFromDataReader<T>(IDataReader reader) where T : new()
 		{
 			List<T> returnList = new List<T>();
 			Type tType = typeof(T);
-			int counter = 0;
 			Dictionary<string, PropertyInfo> propertyMap = new Dictionary<string, PropertyInfo>();
 			List<PropertyInfo> propertyInfos = new List<PropertyInfo>(tType.GetProperties());
 			foreach(PropertyInfo pInfo in propertyInfos)
@@ -52,7 +72,7 @@ namespace ooglue
 				}
 			}
 			
-			while(reader.Read() && count != 0 && counter++ < count)
+			while(reader.Read())
 			{
 				T t = new T();
 				string fieldName = string.Empty;
@@ -69,7 +89,7 @@ namespace ooglue
 							try
 							{
 								PropertyInfo info = propertyMap[fieldName];
-								//log.InfoFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
+								log.DebugFormat("Mapping {0} to {1}", reader.GetValue(i).ToString(), info.Name);
 								if(info.PropertyType == typeof(bool))
 									info.SetValue(t, reader.GetBoolean(i), null);
 								else
@@ -77,22 +97,21 @@ namespace ooglue
 							}
 							catch(Exception ex)
 							{
-								log.Error(ex.ToString());							}
+								log.ErrorFormat("ooglue.DataExchange() - There was an error setting a property value on {0} from an object of the type {1}", fieldName, typeof(T).ToString(),ex.ToString());							}
 							}
 					}
 					catch(Exception ex)
 					{
-						log.ErrorFormat("Could not map field {0}: {1}", i, ex.ToString());
+						log.ErrorFormat("ooglue.DataExchange() - Could not map field {0}: {1}", i, ex.ToString());
 						throw;
 					}
 				}
 				returnList.Add(t);
 			}
-			Debug.WriteLine(returnList.ToString());
 			return returnList;
 		}
 		
-		public static IDbCommand GetCommandFromObject<T>(DataAccess access, T paramsObject)
+		public IDbCommand GetCommandFromObject<T>(T paramsObject)
 		{
 			IDbConnection connection = access.NewConnection;
 			IDbCommand command = connection.CreateCommand();
@@ -113,18 +132,25 @@ namespace ooglue
 			return command;
 		}
 		
-		public static IDbCommand GetDynamicInsertFromObject<T>(DataAccess access, T paramsObject)
+		public IDbCommand GetCommandFromObject<T>(T paramsObject, string commandText, CommandType commandType)
 		{
-			const string templateString = "insert into {0} ({1}) values ({2})";
-			const string valueTemplateString = "'{0}'";
-			string dataTableName = string.Empty;
+			IDbCommand returnCommand = GetCommandFromObject<T>(paramsObject);
+			returnCommand.CommandText = commandText;
+			returnCommand.CommandType = commandType;
+			return returnCommand;
+		}
+		
+		public string GetDynamicInsertStringFromObject<T>(T paramsObject)
+		{
+			string templateString = access.InsertTemplate;
+            const string valueTemplateString = "'{0}'";
+            string dataTableName = string.Empty;
+			
 			List<string> fields = new List<string>();
 			List<string> values = new List<string>();
+			
 			List<TableAttribute> dataTableAttributes =
 				new List<TableAttribute>((TableAttribute[])typeof(T).GetCustomAttributes(typeof(TableAttribute), true));
-			
-			IDbConnection connection = access.NewConnection;
-			IDbCommand command = connection.CreateCommand();
 			
 			if(dataTableAttributes.Count > 0)
 			{
@@ -152,21 +178,17 @@ namespace ooglue
 				}
 			}
 			
-			command.CommandText = string.Format(
-			                                    templateString, 
-			                                    dataTableName, 
-			                                    string.Join(",", fields.ToArray()), 
-			                                    string.Join(",", values.ToArray()));
-			
-			command.CommandType = CommandType.Text;
-			
-			return command;
+			return string.Format(
+					            templateString, 
+					            dataTableName, 
+					            string.Join(",", fields.ToArray()), 
+					            string.Join(",", values.ToArray()));
 		}
 		
 		
-		public static IDbCommand GetDynamicUpdateFromObject<T>(DataAccess access, T paramsObject)
+		public string GetDynamicUpdateStringFromObject<T>(T paramsObject)
 		{
-			const string templateString = "update {0} set {1} where {2} = {3}";
+			string templateString = access.UpdateTemplate;
 			const string valueTemplateString = "{0} = '{1}'";
 			
 			string dataTableName = string.Empty;
@@ -194,56 +216,56 @@ namespace ooglue
 				}
 			}
 			
-			IDbCommand command = access.NewConnection.CreateCommand ();
-			command.CommandText = string.Format(
-			                                    templateString, 
-			                                    dataTableName, 
-			                                    string.Join(",", updateValues.ToArray()),
-			                                    primaryKey.Key,
-			                                    primaryKey.Value);
-			
-			command.CommandType = CommandType.Text;
-			
-			return command;
+			return string.Format(
+								templateString, 
+								dataTableName, 
+								string.Join(",", updateValues.ToArray()),
+								primaryKey.Key,
+								primaryKey.Value);
 		}
 		
-		public static IDbCommand GetDynamicDeleteFromObject<T>(DataAccess access, T paramsObject)
+		public IDbCommand GetDynamicUpdateFromObject<T>(T paramsObject)
 		{
-			const string commandTextTemplate = "delete from {0} where {1} = '{2}'";
+			string updateString = GetDynamicUpdateStringFromObject<T>(paramsObject);
+			return GetCommandFromObject<T>(paramsObject, updateString, CommandType.Text);
+		}
+		
+		public string GetDynamicDeleteStringFromObject<T>(T paramsObject)
+		{
+			string commandTextTemplate = access.DeleteTemplate;
 			
 			string tableName;
 			KeyValuePair<string,string> primaryKey;
-			IDbConnection connection = access.NewConnection;
-			IDbCommand command = connection.CreateCommand();
-			
+
 			tableName = getTableNameFromObject<T>(paramsObject);
 			primaryKey = getPrimaryKeyFromObject<T>(paramsObject);
 			
-			command.CommandText = string.Format(
-			                                    commandTextTemplate,
-			                                    tableName,
-			                                    primaryKey.Key,
-			                                    primaryKey.Value);
-			command.CommandType = CommandType.Text;
-			return command;
+			return string.Format(
+                                commandTextTemplate,
+                                tableName,
+                                primaryKey.Key,
+                                primaryKey.Value);
 		}
 		
-		public static IDbCommand GetDynamicSelectFromObject<T>(DataAccess access, T paramsObject)
+		public IDbCommand GetDynamicDeleteFromObject<T>(T paramsObject)
 		{
-			const string commandText = "select {0} from {1} {2}";
+			string deleteString = GetDynamicDeleteStringFromObject<T>(paramsObject);
+			return GetCommandFromObject<T>(paramsObject, deleteString, CommandType.Text);
+		}
+		
+		public string GetDynamicSelectStringFromObject<T>(T paramsObject)
+		{
+			string commandText = access.SelectTemplate;
 			string dataTableName = getTableNameFromObject<T>(paramsObject);
 			IDbCommand command = access.NewConnection.CreateCommand();
-			command.CommandText = string.Format(
-			                                    commandText,
-			                                    getFieldListFromObject<T>(paramsObject),
-			                                    dataTableName,
-			                                    getWhereListFromObject<T>(paramsObject));
-			command.CommandType = CommandType.Text;
-			
-			return command;
+			return string.Format(
+                                commandText,
+                                getFieldListFromObject<T>(paramsObject),
+                                dataTableName,
+                                getWhereListStringFromObject<T>(paramsObject));
 		}
 		
-		internal static string getFieldListFromObject<T>(T searchObject)
+		internal string getFieldListFromObject<T>(T searchObject)
 		{
 			StringBuilder builder = new StringBuilder();
 			
@@ -254,7 +276,7 @@ namespace ooglue
 			return string.Join(" , ", items.ToArray());
 		}
 		
-		internal static string getWhereListFromObject<T>(T searchObject)
+		internal string getWhereListStringFromObject<T>(T searchObject)
 		{
 			StringBuilder builder = new StringBuilder();
 			
@@ -272,7 +294,7 @@ namespace ooglue
 				return string.Empty;
 		}
 		
-		internal static KeyValuePair<string, string> getPrimaryKeyFromObject<T>(T searchObject)
+		internal KeyValuePair<string, string> getPrimaryKeyFromObject<T>(T searchObject)
 		{
 			KeyValuePair<string,string> primaryKey = new KeyValuePair<string, string>();
 			
@@ -295,7 +317,7 @@ namespace ooglue
 			return primaryKey;
 		}
 		
-		internal static string getTableNameFromObject<T>(T searchObject)
+		internal string getTableNameFromObject<T>(T searchObject)
 		{
 			string dataTableName = string.Empty;
 			
