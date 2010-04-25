@@ -1,0 +1,9 @@
+2010-04-25  karbon  <karbon@gmail.com>
+
+	* app.config:
+	* GeneralTests.cs:
+	* SqliteAccessTests.cs:
+	* DataExchangeTests.cs:
+	* ObjectMapperTests.cs:
+	* ObjectMapperTests.Objects.cs: 
+
