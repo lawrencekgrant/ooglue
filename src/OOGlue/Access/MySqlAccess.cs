@@ -65,6 +65,9 @@ namespace ooglue.Access
 		/// </returns>
 		public override IDataReader ExecuteSql (IDbConnection connection, string commandText)
 		{
+			if(connection == null)
+				throw new NullReferenceException("Cannot Execute SQL against a null connection.");
+			
 			MySqlCommand command = (MySqlCommand)connection.CreateCommand ();
 			command.CommandText = commandText;
 			command.CommandType = CommandType.Text;
@@ -106,6 +109,14 @@ namespace ooglue.Access
 			}
 		}
 		
+		public override string CreateTableTemplate 
+		{
+			get 
+			{
+				return "create table {0}";
+			}
+		}
+
 		#endregion
 		/// <summary>
 		/// Returns a new MySqlConnection object with the default connection string.

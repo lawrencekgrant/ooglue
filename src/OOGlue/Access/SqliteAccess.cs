@@ -1,13 +1,25 @@
 
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using Mono.Data.SqliteClient;
 
 namespace ooglue.Access
 {
+	/// <summary>
+	/// This class is a concrete implementation of the <see cref="ooglue.Access.DataAccess"/> class. 
+	/// This class is specific to Sqlite.
+	/// </summary>
+	/// <remarks>
+	/// One thing that I really need to think about is seeing if there is a way that I can make this .NET compatible easliy, without
+	/// including Mono.Data.Sqlite. It is compatible with that assembly referenced, however, .NET (obviously) has no Mono.Data.Sqlite.
+	/// </remarks>
 	public class SqliteAccess : DataAccess
 	{
+		/// <summary>
+		/// Returns the default connection string for a Sqlite database
+		/// </summary>
 		public override string ConnectionString {
 			get 
 			{
@@ -15,14 +27,20 @@ namespace ooglue.Access
 			}
 		}
 		
+		/// <summary>
+		/// A default instantiated <see cref="System.Data.IDbConnection"/> for a Sqlite database.
+		/// </summary>
 		public override IDbConnection NewConnection 
 		{
 			get 
 			{
-				new SqliteConnection(ConnectionString);
+				return new SqliteConnection(ConnectionString);
 			}
 		}
 		
+		/// <summary>
+		/// The default prefix for a parameter using s Sqlite database.
+		/// </summary>
 		public override string ParameterPrefix 
 		{
 			get 
@@ -32,21 +50,55 @@ namespace ooglue.Access
 		}
 		
 		
-		
-		public override IDataReader ExecuteProcedure (System.Data.IDbConnection connection, string procedureName, params IDataParameter[] parameters)
+		/// <summary>
+		/// Executes a stored procedure against a Sqlite database.
+		/// </summary>
+		/// <param name="connection">
+		/// A <see cref="System.Data.IDbConnection"/> used to connect to the database and execute SQL statements.
+		/// </param>
+		/// <param name="procedureName">
+		/// A <see cref="System.String"/> that defines the name of the stored procedure to call.
+		/// </param>
+		/// <param name="parameters">
+		/// A list of <see cref="IDataParameter[]"/> that defines the parameters to call the stored procedure with.
+		/// </param>
+		/// <returns>
+		/// A <see cref="IDataReader"/> containing the data returned from the stored procedure.
+		/// </returns>
+		public override IDataReader ExecuteProcedure (System.Data.IDbConnection connection, 
+		                                              string procedureName, 
+		                                              params IDataParameter[] parameters)
 		{
 			IDbCommand command = connection.CreateCommand();
 			command.CommandText = procedureName;
 			command.CommandType = CommandType.StoredProcedure;
-			command.Parameters = parameters;
+			new List<IDataParameter>(parameters).ForEach(param => 
+			{
+				command.Parameters.Add(param);	
+			});
 			return command.ExecuteReader();
 		}
 		
 		
-		
+		/// <summary>
+		/// Creates a new SqliteAccess instance.
+		/// </summary>
 		public SqliteAccess ()
 		{
 		}
+		
+		/// <summary>
+		/// Executese a custom sql string against the specified data connection.
+		/// </summary>
+		/// <param name="connection">
+		/// A <see cref="System.Data.IDbConnection"/>
+		/// </param>
+		/// <param name="commandText">
+		/// A <see cref="System.String"/>
+		/// </param>
+		/// <returns>
+		/// A <see cref="IDataReader"/>
+		/// </returns>
 		public override IDataReader ExecuteSql (System.Data.IDbConnection connection, string commandText)
 		{
 			IDbCommand command = connection.CreateCommand();
@@ -90,6 +142,14 @@ namespace ooglue.Access
 			}
 		}
 		
+		
+		public override string CreateTableTemplate 
+		{
+			get 
+			{
+				return "create table {0}";
+			}
+		}
 		#endregion
 		
 		

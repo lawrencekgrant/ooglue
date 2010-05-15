@@ -9,7 +9,7 @@ namespace ooglue
 	/// I believe that we'll be using an indexed approach to handle this in the future. Perhaps specifying precidence in the actual column
 	/// attribute is the solution to this.
 	/// </remarks>
-	public enum MappingDirection : byte
+	public enum MappingDirection
 	{
 		/// <summary>
 		/// The first element that matches a value will be mapped, and will not be overridden.

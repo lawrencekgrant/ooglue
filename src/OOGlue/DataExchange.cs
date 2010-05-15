@@ -29,9 +29,9 @@ namespace ooglue
 		/// <param name="access">
 		/// A <see cref="DataAccess"/> that determines the data access method for the exchange to be created.
 		/// </param>
-		public DataExchange (DataAccess access)
+		public DataExchange (DataAccess dataAccess)
 		{
-			access = access;
+			this.access = dataAccess;
 		}
 		
 		
@@ -95,9 +95,9 @@ namespace ooglue
 								else
 									info.SetValue(t, reader.GetValue(i), null);
 							}
-							catch(Exception ex)
+							catch(TargetException ex)
 							{
-								log.ErrorFormat("ooglue.DataExchange() - There was an error setting a property value on {0} from an object of the type {1}", fieldName, typeof(T).ToString(),ex.ToString());							}
+								log.ErrorFormat("ooglue.DataExchange() - There was an error setting a property value on {0} from an object of the type {1}.", fieldName, typeof(T).ToString(),ex.ToString());							}
 							}
 					}
 					catch(Exception ex)
@@ -250,6 +250,7 @@ namespace ooglue
 		public IDbCommand GetDynamicDeleteFromObject<T>(T paramsObject)
 		{
 			string deleteString = GetDynamicDeleteStringFromObject<T>(paramsObject);
+			Console.WriteLine("Delete string is {0}", deleteString);
 			return GetCommandFromObject<T>(paramsObject, deleteString, CommandType.Text);
 		}
 		
@@ -257,7 +258,6 @@ namespace ooglue
 		{
 			string commandText = access.SelectTemplate;
 			string dataTableName = getTableNameFromObject<T>(paramsObject);
-			IDbCommand command = access.NewConnection.CreateCommand();
 			return string.Format(
                                 commandText,
                                 getFieldListFromObject<T>(paramsObject),

@@ -7,7 +7,7 @@ namespace ooglue
 	/// This attribute is used to tie property or field to a particular column name.
 	/// </summary>
 	/// <remarks>
-	/// These attributes are used in both data mapping and object mapping.
+	/// A ColumnAttribute may only be applied to a field or an attribute. ColumnAttributes are used in both data mapping and object mapping.
 	/// </remarks>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public sealed class ColumnAttribute : DataAttribute

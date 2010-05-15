@@ -9,5 +9,6 @@ namespace ooglue.Access
 		string UpdateTemplate {get;}
 		string DeleteTemplate {get;}
 		string InsertTemplate {get;}
+		string CreateTableTemplate {get;}
 	}
 }

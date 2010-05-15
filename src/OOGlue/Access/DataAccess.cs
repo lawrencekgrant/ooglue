@@ -16,6 +16,7 @@ namespace ooglue.Access
 		public abstract string UpdateTemplate {get;}
 		public abstract string DeleteTemplate {get;}
 		public abstract string InsertTemplate {get;}
+		public abstract string CreateTableTemplate {get;}
 		#endregion
 		
 		public abstract string ConnectionString { get; }

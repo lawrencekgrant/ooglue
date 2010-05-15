@@ -14,15 +14,15 @@ namespace ooglue
 	public class DataConveyor
 	{
 		private static readonly ILog _log = LogManager.GetLogger(typeof(DataConveyor));
-		protected DataExchange dataExchange;
-		protected DataAccess _access;
+		private DataExchange dataExchange;
+		private DataAccess access;
 		
 		/// <summary>
 		/// Constructs a new instance of a DataConveyor
 		/// </summary>
-		public DataConveyor (DataAccess access)
+		public DataConveyor (DataAccess dataAccess)
 		{
-			_access = access;
+			this.access = dataAccess;
 			dataExchange = new DataExchange(access);
 		}
 		
@@ -37,12 +37,16 @@ namespace ooglue
 		/// </param>
 		public void UpdateObject<T>(T objectToUpdate)
 		{
-			IDbCommand command = null;
+			if(objectToUpdate == null)
+				throw new ooglueException(new NullReferenceException("You cannot update a null object."));
 			
+			IDbCommand command = null;
+				
 			try
 			{
 				command = dataExchange.GetDynamicUpdateFromObject<T>(objectToUpdate);
-				command.Connection = _access.NewConnection;
+				_log.DebugFormat("command text for update: {0}", command.CommandText);
+				command.Connection = access.NewConnection;
 				command.Connection.Open();
 				command.ExecuteNonQuery();
 			}
@@ -73,18 +77,25 @@ namespace ooglue
 		/// </param>
 		public void InsertObject<T>(T objectToInsert)
 		{
+			if(objectToInsert == null)
+				throw new ooglueException(new NullReferenceException("You cannot update a null object."));
+			
 			IDbCommand command = null;
 			
 			try
 			{
-				_log.DebugFormat("Connection String for insert: {0}", _access.ConnectionString);
+				_log.DebugFormat("Connection String for insert: {0}", access.ConnectionString);
 				_log.DebugFormat("Object is {0}", objectToInsert.ToString());
-				IDbConnection connection = _access.NewConnection;
+				Console.WriteLine("Connection String for insert: {0}", access.ConnectionString);
+				Console.WriteLine("Object is {0}", objectToInsert.ToString());
+				IDbConnection connection = access.NewConnection;
 				command = connection.CreateCommand();
 				command.CommandText = dataExchange.GetDynamicInsertStringFromObject(objectToInsert);
 				_log.DebugFormat("SQL: {0}", command.CommandText);
+				Console.WriteLine("SQL: {0}", command.CommandText);
 				command.Connection.Open();
-				command.ExecuteNonQuery();
+				int result = command.ExecuteNonQuery();
+				Console.WriteLine("executed. result is {0}", result);
 			}
 			catch { throw; }
 			finally
@@ -109,14 +120,18 @@ namespace ooglue
 		/// </param>
 		public void DeleteObject<T>(T objectToDelete)
 		{
+			if(objectToDelete == null)
+				throw new ooglueException(new NullReferenceException("You cannot delete a null object."));
+			
 			IDbCommand command = null;
 			
 			try
 			{
-				_log.DebugFormat("Connection String for insert: {0}", _access.ConnectionString);
-				_log.DebugFormat("Object is {0}", objectToDelete.ToString());
+				_log.DebugFormat("Connection String for delete: {0}", access.ConnectionString);
+				Console.WriteLine("Deleting object of type {0}", objectToDelete.ToString());
 				command = dataExchange.GetDynamicDeleteFromObject<T>(objectToDelete);
-				command.Connection = _access.NewConnection;
+				
+				command.Connection = access.NewConnection;
 				command.Connection.Open();
 				command.ExecuteNonQuery();
 			}
@@ -154,9 +169,9 @@ namespace ooglue
 			List<T> returnList = new List<T>();
 			try
 			{
-				connection = _access.NewConnection;
+				connection = access.NewConnection;
 				connection.Open();
-				using(reader = _access.ExecuteProcedure(connection, storedProcedureName, parameters))
+				using(reader = access.ExecuteProcedure(connection, storedProcedureName, parameters))
 				{
 					returnList = dataExchange.GetFromDataReader<T>(reader);
 				}
@@ -196,11 +211,11 @@ namespace ooglue
 			List<T> returnList = new List<T>();
 			try
 			{
-				_log.DebugFormat("Data access is {0} null.", _access == null ? string.Empty : "not");
-				connection = _access.NewConnection;
+				_log.DebugFormat("Data access is {0} null.", access == null ? string.Empty : "not");
+				connection = access.NewConnection;
 				connection.Open();
 				_log.DebugFormat("Connection to execute {0} has been opened.", commandText);
-				using(reader = _access.ExecuteSql(connection, commandText))
+				using(reader = access.ExecuteSql(connection, commandText))
 				{
 					returnList = dataExchange.GetFromDataReader<T>(reader);
 				}
