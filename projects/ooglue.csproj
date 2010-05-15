@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <BaseDirectory>..\src\OOGlue</BaseDirectory>
     <RootNamespace>ooglue</RootNamespace>
+    <ReleaseVersion>0.3</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -44,6 +46,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\mysql.connector.6.1\mysql.data.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.SqliteClient" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\src\OOGlue\ColumnAttribute.cs" />
@@ -58,8 +65,14 @@
     <Compile Include="..\src\OOGlue\Access\DataAccess.cs" />
     <Compile Include="..\src\OOGlue\Access\MySqlAccess.cs" />
     <Compile Include="..\src\OOGlue\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\src\OOGlue\ObjectMapper.cs" />
+    <Compile Include="..\src\OOGlue\MappingDirection.cs" />
+    <Compile Include="..\src\OOGlue\Access\SqliteAccess.cs" />
+    <Compile Include="..\src\OOGlue\Access\ISqlSyntax.cs" />
+    <Compile Include="..\src\OOGlue\Configuration\ooglueConfigurationSection.cs" />
+    <Compile Include="..\src\OOGlue\ooglueException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\OOGlue\ooglue.pidb" />
+    <Folder Include="..\src\OOGlue\Configuration\" />
   </ItemGroup>
 </Project>

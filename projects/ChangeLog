@@ -1,0 +1,13 @@
+2010-05-15  karbon  <karbon@gmail.com>
+
+	* ooglue.sln: changed startup item to the test project for
+	ease of testing
+
+	* ooglue.test.csproj: changed version, including nunit to the
+	project.
+	Set changelog policy
+
+	* ooglue.csproj: Added several classes to the project.
+	These classes support SqliteAccess, custom exceptions, and
+	configuration sections
+
