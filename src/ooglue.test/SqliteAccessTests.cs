@@ -14,7 +14,7 @@ namespace ooglue.test
 	[Table("notes")]
 	public class Note
 	{
-		[Column("id")]
+		[Column("id", true)]
 		public int Id {get;set;}
 		[Column("note_text")]
 		public string Text {get;set;}
@@ -97,12 +97,39 @@ namespace ooglue.test
 		[Test]
 		public void UpdateRecordsTest()
 		{
+			InsertRecordsTest();
+			List<Note> notes = _conveyor.FetchObjectListBySql<Note>("select * from notes");
+			notes.ForEach(note=>
+			              {
+				Console.WriteLine("note title: {0}", note.Title);
+				note.Title = "updated";
+				Console.WriteLine("new note title: {0}", note.Title);
+				_conveyor.UpdateObject<Note>(note);
+			});
+			
+			notes = _conveyor.FetchObjectListBySql<Note>("select * from notes");
+			Assert.AreEqual(5, notes.Count);
+			notes.ForEach(note=>
+			              {
+				Console.WriteLine("current title: {0}", note.Title);
+				Assert.AreSame("updated", note.Title);
+			});
 		}
 		
 		[Test]
 		public void DeleteRecordsTest()
 		{
-			
+			InsertRecordsTest();
+			List<Note> notes = _conveyor.FetchObjectListBySql<Note>("select * from notes");
+			Console.WriteLine("Note Count: {0}", notes.Count);
+			Assert.AreEqual(5, notes.Count);
+			notes.ForEach(note=>
+			              {
+			   _conveyor.DeleteObject<Note>(note);
+			});
+			notes = _conveyor.FetchObjectListBySql<Note>("select * from notes");
+			Console.WriteLine("Note Count: {0}", notes.Count);
+			Assert.AreEqual(0, notes.Count);
 		}
 		
 		private void CreateDatabase()
