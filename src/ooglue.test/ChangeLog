@@ -1,5 +1,14 @@
 2010-05-15  karbon  <karbon@gmail.com>
 
+	* SqliteAccessTests.cs: Updated SQL for the table creation,
+	  added an auto-increment primary key, the delete and update
+	  tests were failing because there was no primary key.
+	Changed my comparison in SelectRecordsTest from .AreSame,
+	  which is for references to AreEqual, which is for value
+	  types
+
+2010-05-15  karbon  <karbon@gmail.com>
+
 	* app.config:
 	* SqliteAccessTests.cs: 
 

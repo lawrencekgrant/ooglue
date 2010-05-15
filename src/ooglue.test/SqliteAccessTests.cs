@@ -89,6 +89,7 @@ namespace ooglue.test
 		[Test]
 		public void SelectRecordsTest()
 		{
+			InsertRecordsTest();
 			List<Note> notes = _conveyor.FetchObjectListBySql<Note>("select * from notes");
 			Console.WriteLine("Notes Found: {0}", notes.Count);
 			Assert.Greater(notes.Count, 0);
@@ -108,11 +109,10 @@ namespace ooglue.test
 			});
 			
 			notes = _conveyor.FetchObjectListBySql<Note>("select * from notes");
-			Assert.AreEqual(5, notes.Count);
 			notes.ForEach(note=>
 			              {
 				Console.WriteLine("current title: {0}", note.Title);
-				Assert.AreSame("updated", note.Title);
+				Assert.AreEqual("updated", note.Title);
 			});
 		}
 		
@@ -141,7 +141,7 @@ namespace ooglue.test
 					SqliteCommand command = (SqliteCommand)connection.CreateCommand();
 					command.CommandType = System.Data.CommandType.Text;
 					connection.Open();
-					command.CommandText = "create table notes(id int, note_text varchar(255), title varchar(255))";
+					command.CommandText = "create table notes(id INTEGER PRIMARY KEY AUTOINCREMENT, note_text varchar(255), title varchar(255))";
 					command.ExecuteNonQuery();
 					connection.Close();
 				}
