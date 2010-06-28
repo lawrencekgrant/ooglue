@@ -3,43 +3,43 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using Mono.Data.SqliteClient;
+using System.Data.SQLite;
 
 namespace ooglue.Access
 {
 	/// <summary>
 	/// This class is a concrete implementation of the <see cref="ooglue.Access.DataAccess"/> class. 
-	/// This class is specific to Sqlite.
+	/// This class is specific to SQLite.
 	/// </summary>
 	/// <remarks>
 	/// One thing that I really need to think about is seeing if there is a way that I can make this .NET compatible easliy, without
-	/// including Mono.Data.Sqlite. It is compatible with that assembly referenced, however, .NET (obviously) has no Mono.Data.Sqlite.
+	/// including Mono.Data.SQLite. It is compatible with that assembly referenced, however, .NET (obviously) has no Mono.Data.SQLite.
 	/// </remarks>
-	public class SqliteAccess : DataAccess
+	public class SQLiteAccess : DataAccess
 	{
 		/// <summary>
-		/// Returns the default connection string for a Sqlite database
+		/// Returns the default connection string for a SQLite database
 		/// </summary>
 		public override string ConnectionString {
 			get 
 			{
-				return ConfigurationManager.ConnectionStrings["SqliteConnectionString"].ConnectionString;
+				return ConfigurationManager.ConnectionStrings["SQLiteConnectionString"].ConnectionString;
 			}
 		}
 		
 		/// <summary>
-		/// A default instantiated <see cref="System.Data.IDbConnection"/> for a Sqlite database.
+		/// A default instantiated <see cref="System.Data.IDbConnection"/> for a SQLite database.
 		/// </summary>
 		public override IDbConnection NewConnection 
 		{
 			get 
 			{
-				return new SqliteConnection(ConnectionString);
+				return new SQLiteConnection(ConnectionString);
 			}
 		}
 		
 		/// <summary>
-		/// The default prefix for a parameter using s Sqlite database.
+		/// The default prefix for a parameter using s SQLite database.
 		/// </summary>
 		public override string ParameterPrefix 
 		{
@@ -51,7 +51,7 @@ namespace ooglue.Access
 		
 		
 		/// <summary>
-		/// Executes a stored procedure against a Sqlite database.
+		/// Executes a stored procedure against a SQLite database.
 		/// </summary>
 		/// <param name="connection">
 		/// A <see cref="System.Data.IDbConnection"/> used to connect to the database and execute SQL statements.
@@ -81,9 +81,9 @@ namespace ooglue.Access
 		
 		
 		/// <summary>
-		/// Creates a new SqliteAccess instance.
+		/// Creates a new SQLiteAccess instance.
 		/// </summary>
-		public SqliteAccess ()
+		public SQLiteAccess ()
 		{
 		}
 		

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,6 +12,26 @@
     <BaseDirectory>..\src\OOGlue</BaseDirectory>
     <RootNamespace>ooglue</RootNamespace>
     <ReleaseVersion>0.3</ReleaseVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +52,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -48,11 +69,13 @@
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\log4net\log4net.dll</HintPath>
+      <HintPath>..\..\..\..\lib\log4net-1.2.10\bin\mono\2.0\release\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.SqliteClient" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\src\OOGlue\Access\SqlServerAccess.cs">
+      <Link>Access\SqlServerAccess.cs</Link>
+    </Compile>
     <Compile Include="..\src\OOGlue\ColumnAttribute.cs" />
     <Compile Include="..\src\OOGlue\DataAttribute.cs" />
     <Compile Include="..\src\OOGlue\DataConveyor.cs" />
@@ -62,17 +85,41 @@
     <Compile Include="..\src\OOGlue\ProcedureAttribute.cs" />
     <Compile Include="..\src\OOGlue\TableAttribute.cs" />
     <Compile Include="..\src\OOGlue\Utility.cs" />
-    <Compile Include="..\src\OOGlue\Access\DataAccess.cs" />
-    <Compile Include="..\src\OOGlue\Access\MySqlAccess.cs" />
-    <Compile Include="..\src\OOGlue\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\src\OOGlue\Access\DataAccess.cs">
+      <Link>Access\DataAccess.cs</Link>
+    </Compile>
+    <Compile Include="..\src\OOGlue\Access\MySqlAccess.cs">
+      <Link>Access\MySqlAccess.cs</Link>
+    </Compile>
+    <Compile Include="..\src\OOGlue\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\src\OOGlue\ObjectMapper.cs" />
     <Compile Include="..\src\OOGlue\MappingDirection.cs" />
-    <Compile Include="..\src\OOGlue\Access\SqliteAccess.cs" />
+    <Compile Include="..\src\OOGlue\Access\SqliteAccess.cs">
+      <Link>Access\SqliteAccess.cs</Link>
+    </Compile>
     <Compile Include="..\src\OOGlue\Access\ISqlSyntax.cs" />
-    <Compile Include="..\src\OOGlue\Configuration\ooglueConfigurationSection.cs" />
+    <Compile Include="..\src\OOGlue\Configuration\ooglueConfigurationSection.cs">
+      <Link>Configuration\ooglueConfigurationSection.cs</Link>
+    </Compile>
     <Compile Include="..\src\OOGlue\ooglueException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="..\src\OOGlue\Configuration\" />
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
 </Project>
