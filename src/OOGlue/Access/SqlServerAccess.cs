@@ -65,13 +65,37 @@ namespace ooglue.Access
         public override IDataReader ExecuteSql(IDbConnection connection, string commandText)
         {
             if (connection == null)
-                throw new NullReferenceException("Cannot Execute SQL against a null connection.");
+                throw new NullReferenceException("Cannot execute SQL against a null connection.");
 
             SqlCommand command = (SqlCommand)connection.CreateCommand();
             command.CommandText = commandText;
             command.CommandType = CommandType.Text;
             return command.ExecuteReader();
-        }
+		}
+		
+		public override object ExecuteScalar(IDbConnection connection, string commandText)
+		{
+			if(connection == null)
+				throw new NullReferenceException("Cannot execute SQL against a null connection.");
+			
+			if(connection.State != ConnectionState.Broken)
+				throw new ooglueException(new InvalidOperationException("Broken connection. Aborting."));
+			try
+			{
+				if(connection.State == ConnectionState.Closed)
+					connection.Open();
+				
+				SqlCommand command = (SqlCommand)connection.CreateCommand();
+				command.CommandText = commandText;
+				command.CommandType = CommandType.Text;
+				return command.ExecuteScalar();
+			}
+			finally
+			{
+				if(connection.State == ConnectionState.Open)
+					connection.Close();
+			}
+		}
 
         #region ISqlSyntax implementation
         public override string SelectTemplate

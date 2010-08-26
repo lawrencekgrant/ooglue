@@ -10,6 +10,7 @@ namespace ooglue.Access
 	{
 		public abstract IDataReader ExecuteProcedure (IDbConnection connection, string procedureName, params IDataParameter[] parameters);
 		public abstract IDataReader ExecuteSql(IDbConnection connection, string commandText);
+		public abstract object ExecuteScalar(IDbConnection connection, string commandText);
 		
 		#region ISqlSyntax implementation
 		public abstract string SelectTemplate {get;}

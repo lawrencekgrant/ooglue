@@ -17,6 +17,7 @@ namespace ooglue
 		/// and updating values.
 		/// </summary>
 		public bool IsPrimaryKey { get; set; }
+		public bool HasDefault {get; set; }
 
 		/// <summary>
 		/// Constructs a new ColumnAttribute
@@ -26,6 +27,8 @@ namespace ooglue
 		/// </param>
 		public ColumnAttribute (string name) : base(name)
 		{
+			HasDefault = false;
+			IsPrimaryKey = false;
 		}
 
 		/// <summary>
@@ -40,6 +43,11 @@ namespace ooglue
 		public ColumnAttribute (string name, bool isPrimaryKey) : this(name)
 		{
 			this.IsPrimaryKey = isPrimaryKey;
+		}
+		
+		public ColumnAttribute (string name, bool isPrimaryKey, bool hasDefault) : this(name, isPrimaryKey)
+		{
+			this.HasDefault = hasDefault;
 		}
 	}
 }

@@ -48,7 +48,9 @@ namespace ooglue
 				_log.DebugFormat("command text for update: {0}", command.CommandText);
 				command.Connection = access.NewConnection;
 				command.Connection.Open();
+				DateTime start = DateTime.Now;
 				command.ExecuteNonQuery();
+				_log.DebugFormat("Update took {0}.", DateTime.Now.Subtract(start));
 			}
 			catch(Exception ex)
 			{
@@ -85,17 +87,14 @@ namespace ooglue
 			try
 			{
 				_log.DebugFormat("Connection String for insert: {0}", access.ConnectionString);
-				_log.DebugFormat("Object is {0}", objectToInsert.ToString());
-				Console.WriteLine("Connection String for insert: {0}", access.ConnectionString);
-				Console.WriteLine("Object is {0}", objectToInsert.ToString());
 				IDbConnection connection = access.NewConnection;
 				command = connection.CreateCommand();
 				command.CommandText = dataExchange.GetDynamicInsertStringFromObject(objectToInsert);
 				_log.DebugFormat("SQL: {0}", command.CommandText);
-				Console.WriteLine("SQL: {0}", command.CommandText);
 				command.Connection.Open();
+				DateTime start = DateTime.Now;
 				int result = command.ExecuteNonQuery();
-				Console.WriteLine("executed. result is {0}", result);
+				_log.DebugFormat("Insert took {0}.", DateTime.Now.Subtract(start));
 			}
 			catch { throw; }
 			finally
@@ -218,6 +217,57 @@ namespace ooglue
 				using(reader = access.ExecuteSql(connection, commandText))
 				{
 					returnList = dataExchange.GetFromDataReader<T>(reader);
+				}
+				return returnList;
+				
+			}
+			catch(Exception ex)
+			{
+				throw;
+			}
+			finally
+			{
+				if(connection != null)
+					connection.Close();
+			}
+		}
+		
+		
+		/// <summary>
+		/// Retrieves a list of objects of the specified type using a SQL statement.
+		/// </summary>
+		/// <param name="access">
+		/// A <see cref="DataAccess"/> containing information needed to reach the object's storage.
+		/// </param>
+		/// <param name="storedProcedureName">
+		/// A <see cref="System.String"/> containing the statement to be executed.
+		/// </param>
+		/// <param name="parameters">
+		/// A <see cref="IDataParameter[]"/> containing the list of parameters to be used with the stored procedure.
+		/// </param>
+		/// <returns>
+		/// A <see cref="List<T>"/> is returned. The members of the returned list are of the type specified on the method call.
+		/// </returns>
+		public List<T> FetchObjectListByObject<T>(T sourceObject) where T: new()
+		{
+			IDataReader reader;
+			IDbConnection connection = null;
+			List<T> returnList = new List<T>();
+			try
+			{
+				string commandText = dataExchange.GetDynamicSelectStringFromObject<T>(sourceObject);
+				_log.DebugFormat("Data access is {0} null.", access == null ? string.Empty : "not");
+				connection = access.NewConnection;
+				connection.Open();
+				_log.DebugFormat("Connection to execute {0} has been opened.", commandText);
+				DateTime start = DateTime.Now;
+				using(reader = access.ExecuteSql(connection, commandText))
+				{
+					
+					_log.DebugFormat("Select took {0}.", DateTime.Now.Subtract(start));
+					start = DateTime.Now;
+					returnList = dataExchange.GetFromDataReader<T>(reader);
+					_log.DebugFormat("Mapping took {0}.", DateTime.Now.Subtract(start));
 				}
 				return returnList;
 				

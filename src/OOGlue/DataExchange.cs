@@ -164,7 +164,7 @@ namespace ooglue
 				{
 					try
 					{
-					if(columnAttributes[0].IsPrimaryKey)
+					if(columnAttributes[0].IsPrimaryKey | columnAttributes[0].HasDefault)
 						continue;
 					
 					fields.Add(columnAttributes[0].Name);
@@ -205,6 +205,7 @@ namespace ooglue
 					ColumnAttribute column = columnAttributes[0];
 					if(column.IsPrimaryKey)
 					{
+						log.DebugFormat("{0} is the primary key.", column.Name);
 						primaryKey = new KeyValuePair<string, string>(column.Name, propertyInfo.GetValue(paramsObject, null).ToString());
 						continue;
 					}
@@ -266,8 +267,6 @@ namespace ooglue
 		
 		internal string getFieldListFromObject<T>(T searchObject)
 		{
-			StringBuilder builder = new StringBuilder();
-			
 			var items = from pinfo in typeof(T).GetProperties() 
 				from attr in (ColumnAttribute[]) pinfo.GetCustomAttributes(typeof(ColumnAttribute), true)
 				select attr.Name;
@@ -277,13 +276,13 @@ namespace ooglue
 		
 		internal string getWhereListStringFromObject<T>(T searchObject)
 		{
-			StringBuilder builder = new StringBuilder();
 			
 			var items = from pinfo in typeof(T).GetProperties()
 				from attr in (ColumnAttribute[]) pinfo.GetCustomAttributes(typeof(ColumnAttribute), true)
-				where (    pinfo.GetValue(searchObject, null) != null && 
-					       pinfo.GetValue(searchObject, null).ToString() != Activator.CreateInstance(pinfo.PropertyType).ToString()
-					       )
+				where (    (pinfo.PropertyType == typeof(string) && !string.IsNullOrEmpty((string)pinfo.GetValue(searchObject, null))) ||
+					       pinfo.GetValue(searchObject, null) != null &&
+					       (pinfo.PropertyType != typeof(string) && pinfo.GetValue(searchObject, null).ToString() != System.Runtime.Serialization.FormatterServices.GetUninitializedObject(pinfo.PropertyType).ToString()
+					       ))
 				select string.Format("{0} = '{1}'", attr.Name, pinfo.GetValue(searchObject, null).ToString());
 			
 			
