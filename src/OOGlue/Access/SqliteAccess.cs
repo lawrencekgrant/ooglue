@@ -23,7 +23,7 @@ namespace ooglue.Access
 		public override string ConnectionString {
 			get 
 			{
-				return ConfigurationManager.ConnectionStrings["SQLiteConnectionString"].ConnectionString;
+				return DataAccess.GetConnectionString();
 			}
 		}
 		

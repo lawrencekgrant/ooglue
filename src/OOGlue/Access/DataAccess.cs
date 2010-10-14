@@ -1,6 +1,10 @@
 
 using System;
+using System.Collections;
+using System.Configuration;
 using System.Data;
+
+using ooglue.Configuration;
 
 namespace ooglue.Access
 {
@@ -23,5 +27,21 @@ namespace ooglue.Access
 		public abstract string ConnectionString { get; }
 		public abstract IDbConnection NewConnection { get; }
 		public abstract string ParameterPrefix { get; }
+		
+		public static DataAccess GetConfiguredDataAccess()
+		{
+			ConfigurationManager.RefreshSection("ooglueConfigurationSection");
+			OOGlueConfigurationSection ooglueConfigSection = (OOGlueConfigurationSection)System.Configuration.ConfigurationManager.GetSection("ooglueConfigurationSection");
+			Type dataAccessType = Type.GetType(ooglueConfigSection.DataAccessTypeName.ToString());
+			DataAccess returnAccess = (DataAccess)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(dataAccessType);
+			return returnAccess;	
+		}
+		
+		public static string GetConnectionString()
+		{
+			ConfigurationManager.RefreshSection("ooglueConfigurationSection");
+			OOGlueConfigurationSection ooglueConfigSection = (OOGlueConfigurationSection)System.Configuration.ConfigurationManager.GetSection("ooglueConfigurationSection");
+			return ooglueConfigSection.ConnectionString.ToString();
+		}
 	}
 }

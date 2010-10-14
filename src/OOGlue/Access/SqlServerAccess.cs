@@ -160,9 +160,7 @@ namespace ooglue.Access
         {
             get
             {
-                //HACK: hack.
-                return @"Data Source=LG-PC\sqlexpress;Initial Catalog=Lyst;Password=lyst001;User ID=lyst";
-                //return ConfigurationManager.AppSettings["sqlConnectionString"];
+				return DataAccess.GetConnectionString();
             }
         }
 

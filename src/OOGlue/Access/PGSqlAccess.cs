@@ -2,11 +2,14 @@ using System;
 using System.Configuration;
 using System.Data;
 using Npgsql;
+using log4net;
+using ooglue.Configuration;
 
 namespace ooglue.Access
 {
 	public class PGSqlAccess : DataAccess
 	{
+		private readonly ILog log = LogManager.GetLogger(typeof(PGSqlAccess));
 				
 		/// <summary>
 		/// This method executes a routine against a database and returns data.
@@ -60,9 +63,10 @@ namespace ooglue.Access
 		{
 			if(connection == null)
 				throw new NullReferenceException("Cannot execute SQL against a null connection.");
-			
+			/*
 			if(connection.State != ConnectionState.Broken)
 				throw new ooglueException(new InvalidOperationException("Broken connection. Aborting."));
+			*/
 			try
 			{
 				if(connection.State == ConnectionState.Closed)
@@ -143,7 +147,7 @@ namespace ooglue.Access
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["pgsqlConnectionString"];
+				return DataAccess.GetConnectionString();
 			}
 		}
 		

@@ -162,7 +162,7 @@ namespace ooglue.Access
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["mysqlConnectionString"];
+				return DataAccess.GetConnectionString();
 			}
 		}
 		
